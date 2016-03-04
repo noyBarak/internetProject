@@ -53,7 +53,7 @@ function Job( _sDate, _eDate,_type,_course,_priorty) {
 	that.course= _course;
 	that.priorty= _priorty;
 	that.files=[];
-	that.files=function (_job){
+	that.files=function addFile (_job){
 		that.jobs.push(_jobs);
 	}
     return that;

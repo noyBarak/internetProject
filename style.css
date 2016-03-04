@@ -52,37 +52,70 @@ html, body {
 }
 .mster,.crs {
 	display:none;
+	margin:0;
 }
 .mster_lbl{
+    background: linear-gradient(#C7D3DC,#5B798E); 
+    transition: background 1s ease-out;  
+    background-size:1px 200px;  
+	
 	height:5%;
 	width:100%;
-	float:left;
 	color:black;
-
-	margin-bottom:5px;
-	display:inline;
+	display:inline-block;
 	text-align:center;
+	font-size:1em;
+	margin:0;
 }
-
-.crs_lbl,.crs_filler{
+.mster_lbl:Hover,.crs_lbl:Hover{  
+    background-position:100px;  
+}  
+.crs_filler{
 	height:5%;
 	width:100%;
 	float:left;
 	color:black;
-	margin-bottom:5px;
-	display:inline;
+	display:inline-block;
 	text-align:center;
-	font-size:1.7em;
+	font-size:1em;
+	background: linear-gradient(#C7D3DC,#5B798E); 
+	background-size:1px 200px;
+}
+.crs_lbl{
+	background: linear-gradient(#C7D3DC,#5B798E); 
+    transition: background 1s ease-out;  
+    background-size:1px 200px;  
+	
+	height:5%;
+	width:100%;
+	float:left;
+	color:black;
+	display:inline-block;
+	text-align:center;
+	font-size:1em;
+}
+#myForm{	
+	width:100%;
+	height:100%;
+	float:left;
 }
 #Semeters{
+		border-color:black;
+	border-width:1px;
+	border-style:solid;
+	
+	width:10%;
 	height:100%;
 	float:left;
-	margin-right:5px;
 }
 #Courses,#Lessons{
+			border-color:black;
+	border-width:1px;
+	border-style:solid;
+	
 	height:100%;
+	width:10%;
 	float:left;
-	margin-right:5px;
 	display:none;
 }
 #crs_days{
