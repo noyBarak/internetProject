@@ -1,7 +1,8 @@
 var curr_theme="#f2f2f2";   // 0-black , 1- red , 2-blue , 3 white
-var page_number=5;  // 0- default , 2 - settings-Study ,3 -settings-Colors ,4 - settings - bckup
-var AllCourses =	[];
-var AllTests =		[];
+var page_number=0;  // 0- default , 2 - settings-Study ,3 -settings-Colors ,4 - settings - bckup
+var prev_page = page_number;
+//var AllCourses =	[];
+//var AllTests =		[];
 var AllTrimsters=	[];
 var AllJobs=		[];
 var OtherEvents =	[];
@@ -86,35 +87,129 @@ function mster_click(item){
 	var _for =$(item).attr("for");
 	var id =_for.slice(-1);
 	$( "#"+_for ).prop( "checked", true );
-	var _htmlCourser="";
-	for(var i=0;i<id;i++)_htmlCourser+="<span class ='crs_filler' style ='border-style:none;'></span>";
+	var _htmlCourser="<form id='form_crs'>";
+	for(var i=0;i<id;i++)_htmlCourser+="<span class ='crs_filler' ></span>";
 	if(AllTrimsters[id].courses !==null){
 		_courses=AllTrimsters[id].courses;
-		_htmlCourser+="<span class ='crs'style ='border-style:none;'>&#8628</span>";
+		
+		
+		_htmlCourser+="<span class ='crs' style ='border-style:none;'>&#8628</span>";
 		for(var i=0;i<_courses.length;i++){
-			_htmlCourser+="<label class = 'crs_lbl' for='crs_menu_"+i+"' >"+_courses[i].name+"</label>"
-			_htmlCourser+="<input type='radio' name='crs' class='crs' onclick='crs_click(this)' id='crs_menu_"+i+"' ><br>" ;
+			_htmlCourser+="<label class = 'crs_lbl' onmouseover='crs_click(this)' for='crs_menu_"+i+"' >"+_courses[i].name+"</label>"
+			_htmlCourser+="<input type='radio' name='crs' class='crs' id='crs_menu_"+i+"' ><br>" ;
 		}
 	}
-	var _courses = AllTrimsters[id].courses;
-	
-	
-
 	_htmlCourser+="<label class = 'crs_lbl' for='plus_crs' >+</label>"
 	_htmlCourser+="<input type='radio' name='crs' class='crs' id='plus_crs'>";
+	_htmlCourser+="</form>";
+	
+	$("#Lessons").html("");
+	$("#Lessons").css("display","none");
 	
 	$("#Courses").html( _htmlCourser);
 	$("#Courses").css("display","block");
 	
-
-
+	$("#Lessons").css("display","none");
+	
+	var sem_info =  AllTrimsters[id];
+	$("#info_list").html("info : <br>" + 
+		"<br>name : "+sem_info.name+
+		"<br>Start :"+sem_info.sDate+
+		"<br>End :"+sem_info.eDate+
+		"<br>Semester id is : "+sem_info.id
+	);
 	$("#plus_crs").click(function() {
-        $("#new_crs").css("display","block");
+		if ( $("#new_crs").css("display") == "block"){
+			$("#new_crs").css("display","none");
+		}else{
+			$("#new_crs").css("display","block");
+		}
+		$("#Lessons").css("display","none");
+		$("#new_lss").css("display","none");
+		$("#new_sem").css("display","none");
+		var active_Semster = $("input[name='mster']:checked","#form_semster").attr("id");
+		var id_mster=active_Semster.slice(-1);
+		
+		$("#crs_sdate").val(AllTrimsters[id_mster].sDate);
+		$("#crs_edate").val(AllTrimsters[id_mster].eDate);
     });
 }
 function crs_click(item){
+	var _for =$(item).attr("for");
+	var id_crs =_for.slice(-1);
+	$( "#"+_for ).prop( "checked", true );
+	//get active semster:
+	var active_Semster = $("input[name='mster']:checked","#form_semster").attr("id");
+	var id_mster=active_Semster.slice(-1);
+	var _les = AllTrimsters[id_mster].courses[id_crs].lessons;
 	
+	var _htmlLessons="";
+	for(var i=0;i<id_crs;i++)_htmlLessons+="<span class ='lss_filler' ></span>";
+	if(_les !==null){
+		_htmlLessons+="<span class ='lss' style ='border-style:none;'>&#8628</span>";
+		for(var i=0;i<_les.length;i++){
+			_htmlLessons+="<label class = 'lss_lbl' onmouseover='lss_click(this)' for='lss_menu_"+i+"' >"+_les[i].type+"</label>"
+			_htmlLessons+="<input type='radio' name='lss' class='lss' id='lss_menu_"+i+"' ><br>" ;
+		}
+	}
+	_htmlLessons+="<label class = 'lss_lbl' for='plus_lss' >+</label>"
+	_htmlLessons+="<input type='radio' name='lss' class='lss' id='plus_lss'>";
+	
+	$("#Lessons").html( _htmlLessons);
+	$("#Lessons").css("display","block");
+	var course_info =  AllTrimsters[id_mster].courses[id_crs];
+	$("#info_list").html("info : <br>" + 
+		"<br>name : "+course_info.name+
+		"<br>Start :"+course_info.sDate+
+		"<br>End :"+course_info.eDate+
+		"<br>Semester name is : "+AllTrimsters[id_mster].name
+	);
+	$("#plus_lss").click(function() {
+		if ( $("#new_lss").css("display") == "block"){
+			$("#new_lss").css("display","none");
+		}else{
+			$("#new_lss").css("display","block");
+		}
+		$("#new_crs").css("display","none");
+		$("#new_sem").css("display","none");
+		var active_Semster = $("input[name='mster']:checked","#form_semster").attr("id");
+		var id_mster=active_Semster.slice(-1);
+
+		$("#lss_sdate").val(AllTrimsters[id_mster].sDate);
+		$("#lss_edate").val(AllTrimsters[id_mster].eDate);
+		
+    });
+
 }
+function lss_click(item){
+	var _for =$(item).attr("for");
+	var id_lss =_for.slice(-1);
+	
+	var active_Semster = $("input[name='mster']:checked","#form_semster").attr("id");
+	var id_mster=active_Semster.slice(-1);
+	
+	var active_crs = $("input[name='crs']:checked","#form_crs").attr("id");
+	var id_crs=active_Semster.slice(-1);
+	//get active semster:
+	
+	var _les = AllTrimsters[id_mster].courses[id_crs].lessons[id_lss];
+	
+	
+	$("#info_list").html("info : <br>" + 
+	"<br>Type : "+_les.type+
+	"<br>In :"+_les.loc+
+	"<br>Course name is : "+AllTrimsters[id_mster].courses[id_crs].name
+	);
+}
+$('html').on('keydown' , function(event) {
+        if(! $(event.target).is('input')) {
+           //event.preventDefault();
+           if(event.which == 8) {
+			build_page_by_theme(curr_theme, prev_page);
+            return false;
+         }
+        }
+});
 function build_page_by_theme(theme, page_num){
     $("#body").html("<div id='dialogoverlay'></div>"+ "<div id='dialogbox'><div id='dialogbox_head'></div><div id='dialogbox_body'></div><div id='dialogbox_foot'></div></div>");
     
@@ -174,27 +269,36 @@ function build_page_by_theme(theme, page_num){
 			"<div id='rmv_event'>remove event</div>"+
 			""
 			);
+			$( "#the-photo-file-field" ).change(function() {
+				renderImage(this.files[0]);
+			});
 			$("#dialogoverlay").css("height", window.innerHeight+"px");
 			$("#dialogoverlay").css("display","block");
 			$("#dialogoverlay").css("opacity","0");
 			$("#close_info").click(function() {
 				$("#info_hover").css("display","none");
 				$("#dialogoverlay").css("display","none");
+				prev_page = page_number;
 				page_number=0;
 				build_page_by_theme(curr_theme,page_number);
 			});
 			$("#dialogoverlay").click(function() {
 				$("#info_hover").css("display","none");
 				$("#dialogoverlay").css("display","none");
+				prev_page = page_number;
 				page_number=0;
 				build_page_by_theme(curr_theme,page_number);
 			});
 			$("#rmv_event").click(function() {
-				for(var i=0;i<localStorage.length;i++){
-					if(localStorage.key(i) == calEvent.title){
-						localStorage.removeItem(localStorage.key(i));
-					}
+//Look for calEvent.title in Semester->course->lessons
+//Look for calEvent.title in Semester->course->lessons->Jobs 
+//Look for calEvent.title in AllJobs
+				for(var i=0;i<AllJobs.length;i++){
+					if(AllJobs[i].name == calEvent.title)
+						AllJobs.splice(i, 1);
 				}
+				bckAll();
+				prev_page = page_number;
 				page_number=0;
 				build_page_by_theme(curr_theme,page_number);
 			});
@@ -213,19 +317,25 @@ function build_page_by_theme(theme, page_num){
 	});
     if(page_num==0){
 		var tempString ;
-		var obj;    
-	//get and render all events :
+		var obj;
+		//get and render all events :
 		rsrAll();
-		for(var i=0;i<AllJobs.length;i++){
+		for(var i=0;i<AllTrimsters.length;i++){
 			//get from local storage
-			obj = AllJobs[i];
-			var tiny = tinycolor(obj.backgroundColor);
-			if(tiny.getBrightness() <100){
-				obj.textColor = "white";
-			}else{
-				obj.textColor = "black";
+			_courseToShow = AllTrimsters[i].courses;
+			if(_courseToShow == null){
+				continue;
 			}
-			addCalanderEvent(obj.sDate,obj.eDate,obj.name,curr_theme);
+			for(var k=0;k<_courseToShow.length;k++){
+				if(_courseToShow[k].lessons==null){
+					continue;
+				}
+				for ( var j=0;j<_courseToShow[k].lessons.length; j++){
+					obj=_courseToShow[k].lessons[i];
+					addCalanderEvent(obj.sHour,obj.eHour,_courseToShow[k].name + " " +obj.type,obj.backgroundColor);
+				}
+			}
+
 		}
 	}
     if(page_num==1){
@@ -326,7 +436,7 @@ function build_page_by_theme(theme, page_num){
 		rsrAll();
 		$("#body").html($("#body").html()+"<div id='bTT'></div>");
 	
-		var _htmlSemsters="<form id='myForm'>";
+		var _htmlSemsters="<form id='form_semster'>";
 		if(AllTrimsters!==null){
 			for(var i=0; i < AllTrimsters.length;i++){
 			_htmlSemsters+="<label class = 'mster_lbl' onmouseover='mster_click(this);' for='sem_menu_"+AllTrimsters[i].id+"' >"+AllTrimsters[i].name+"</label>"
@@ -366,65 +476,84 @@ function build_page_by_theme(theme, page_num){
 			"<br><br><label for='crs_name'>Name : </label>"+
 			"<input type='text' id='crs_name'><br>"+
 			
-			"What days ?! : "+
-			"<div id = 'crs_days'>"+
-			"<label for='crs_sunday'>Sunday</label>"+
-			"<input type='checkbox' id='crs_sunday'>"+
-			
-			"<label for='crs_monday'>Monday</label>"+
-			"<input type='checkbox' id='crs_monday'>"+
-			
-			"<label for='crs_tuesday'>Tuesday</label>"+
-			"<input type='checkbox' id='crs_tuesday'>"+
-			
-			"<label for='crs_wednesday'>Wednesday</label>"+
-			"<input type='checkbox' id='crs_wednesday'>"+
-			
-			"<label for='crs_thursday'>Thursday</label>"+
-			"<input type='checkbox' id='crs_thursday'>"+
-			
-			"<label for='crs_friday'>Friday</label>"+
-			"<input type='checkbox' id='crs_friday'>"+
-			
-			"<label for='crs_saturday'>Saturday</label>"+
-			"<input type='checkbox' id='crs_saturday'></div><br>"+
-			
 			"<label  for='crs_sdate'>Start date : </label>"+
 			"<input type='date' id='crs_sdate'><br>"+
 			
 			"<label   for='crs_edate'>End date : </label>"+
 			"<input type='date' id='crs_edate'><br>"+
 			
-			"<label   for='crs_tchr'>Teacher : </label>"+
-			"<select id = 'crs_tchr'>"+
-				"<option value='volvo'>Volvo</option>"+
-				"<option value='saab'>Saab</option>"+
+			"<button id='add_crs' >ADD_Lesson</button>"+
+		"</div>"+
+		"<div id= 'new_lss'>"+
+			//add type
+			"<label   for='lss_type'>Type : </label>"+
+			"<select id = 'lss_type'>"+
+				"<option value='lecture'>Lecture</option>"+
+				"<option value='exercise'>Exercise</option>"+
+				"<option value='lab'>Lab</option>"+
+			"</select><br>"+
+			//add description			
+			
+			"<label  for='lss_sdate'>Start date : </label>"+
+			"<input type='date' id='lss_sdate'><br>"+
+			
+			"<label   for='lss_edate'>End date : </label>"+
+			"<input type='date' id='lss_edate'><br>"+
+			
+			"<label   for='lss_loc'>Location: </label>"+
+			"<input type='textarea' id='lss_loc'><br>"+
+			
+			"What days ?! : "+
+			"<div id = 'lss_days'>"+
+			"<label for='lss_sunday'>Sunday</label>"+
+			"<input type='checkbox' id='lss_sunday'>"+
+			
+			"<label for='lss_monday'>Monday</label>"+
+			"<input type='checkbox' id='lss_monday'>"+
+			
+			"<label for='lss_tuesday'>Tuesday</label>"+
+			"<input type='checkbox' id='lss_tuesday'>"+
+			
+			"<label for='lss_wednesday'>Wednesday</label>"+
+			"<input type='checkbox' id='lss_wednesday'>"+
+			
+			"<label for='lss_thursday'>Thursday</label>"+
+			"<input type='checkbox' id='lss_thursday'>"+
+			
+			"<label for='lss_friday'>Friday</label>"+
+			"<input type='checkbox' id='lss_friday'>"+
+			
+			"<label for='lss_saturday'>Saturday</label>"+
+			"<input type='checkbox' id='lss_saturday'></div><br>"+
+			
+			"<label   for='lss_tchr'>Teacher : </label>"+
+			"<select id = 'lss_tchr'>"+
+				"<option value='david'>David</option>"+
+				"<option value='shlomo'>Shlomo</option>"+
 			"</select><br>"+
 			
-			"<button id='add_crs' >ADD_Lesson</button>"+
-		"</div>"
+			"<button id='add_lss' >ADD_Lesson</button>"+
+		"</div>"+
+		"<div id='info_list'></div>"
 		);
+		$("#info_list").html("Info : ");
 		
 		$("#sem_sdate").val(moment().format("YYYY-MM-DD"));
 		$("#sem_edate").val(moment().add(3, 'month').format("YYYY-MM-DD"));
-		if(AllTrimsters!==null && AllTrimsters.length-1 >=0){
-			$("#crs_sdate").val(AllTrimsters[AllTrimsters.length-1].sDate);
-			$("#crs_edate").val(AllTrimsters[AllTrimsters.length-1].eDate);
-		}
-		
-		
-		
-		/*$("#crs_inSem").prop('checked',true);
-		$(".in_lbl_5").css("display","none");
-		$("#crs_sdate").css("display","none");
-		$("#crs_edate").css("display","none");*/
 		
 	}
 	$("#plus_sem").click(function() {
-        $("#new_sem").css("display","block");
+		if($("#new_sem").css("display") == "block" ) {
+			$("#new_sem").css("display","none");
+		}else{
+			$("#new_sem").css("display","block");
+		}
 		$("#Courses").css("display","none");
+		$("#new_lss").css("display","none");
+		$("#new_crs").css("display","none");
     });
 	$("#list_view").click(function() {
+		prev_page = page_number;
         page_number=1;
 		build_page_by_theme(curr_theme,page_number);
     });
@@ -442,37 +571,15 @@ function build_page_by_theme(theme, page_num){
 		localStorage.setItem("current-theme",curr_theme);
     });
 	$("#add_crs").click(function() {
-		var _days = [0,0,0,0,0,0,0];
-		if($("#crs_sunday").prop("checked")==true){
-			_days[0]=1;
-		}
-		if($("#crs_monday").prop("checked")==true){
-			_days[1]=1;
-		}
-		if($("#crs_tuesday").prop("checked")==true){
-			_days[2]=1;
-		}
-		if($("#crs_wednesday").prop("checked")==true){
-			_days[3]=1;
-		}
-		if($("#crs_thursday").prop("checked")==true){
-			_days[4]=1;
-		}
-		if($("#crs_friday").prop("checked")==true){
-			_days[5]=1;
-		}
-		if($("#crs_saturday").prop("checked")==true){
-			_days[6]=1;
-		}
-		
 		var crs_tmp = Course($("#crs_name").val(),
 							$("#crs_sdate").val() ,
-							$("#crs_edate").val() ,
-							_days,$("#crs_tchr").val()
+							$("#crs_edate").val() 
 							);
-		AllTrimsters[$("input[name='mster']:checked","#myForm").val()].courses.push(crs_tmp);
-		AllJobs.push(crs_tmp);
+							
+		AllTrimsters[$("input[name='mster']:checked","#form_semster").val()].courses.push(crs_tmp);
+		//AllJobs.push(crs_tmp);
 		bckAll();
+		prev_page = page_number;
 		page_number = 0;
         build_page_by_theme(curr_theme,page_number);
 		addCalanderEvent(crs_tmp.sDate, crs_tmp.eDate, crs_tmp.name, curr_theme);
@@ -485,6 +592,48 @@ function build_page_by_theme(theme, page_num){
 		var _name =  $("#sem_name").val();
 		AllTrimsters.push( Semester(_sDate,_eDate,_name,AllTrimsters.length) );
 		bckAll();
+		prev_page = page_number;
+		page_number = 5;
+        build_page_by_theme(curr_theme,page_number);
+    }); 
+	$("#add_lss").click(function() {
+		var _days = [0,0,0,0,0,0,0];
+		if($("#lss_sunday").prop("checked")==true){
+			_days[0]=1;
+		}
+		if($("#lss_monday").prop("checked")==true){
+			_days[1]=1;
+		}
+		if($("#lss_tuesday").prop("checked")==true){
+			_days[2]=1;
+		}
+		if($("#lss_wednesday").prop("checked")==true){
+			_days[3]=1;
+		}
+		if($("#lss_thursday").prop("checked")==true){
+			_days[4]=1;
+		}
+		if($("#lss_friday").prop("checked")==true){
+			_days[5]=1;
+		}
+		if($("#lss_saturday").prop("checked")==true){
+			_days[6]=1;
+		}
+		var _sDate = $("#lss_sdate").val();
+		var _eDate = $("#lss_edate").val();
+		var _teacher = $("#lss_tchr").val();
+		var _loc = $("#lss_loc").val();
+		var _type = $("#lss_type").val();
+		// color ,
+
+		var t = Lesson(_type,_sDate ,_eDate,_loc,_days,_teacher,curr_theme);
+		var active_Semster = $("input[name='mster']:checked","#form_semster").attr("id");
+		var active_course  = $("input[name='crs']:checked","#form_crs").attr("id");
+		var id_mster =active_Semster.slice(-1);
+		var id_crs =active_course.slice(-1);
+		AllTrimsters[id_mster].courses[id_crs].lessons.push(t);
+		bckAll();
+		prev_page = page_number;
 		page_number = 5;
         build_page_by_theme(curr_theme,page_number);
     }); 
@@ -502,10 +651,12 @@ function build_page_by_theme(theme, page_num){
         menu_obj.render();
     });
 	$("#buildTT").click(function() {
+		prev_page = page_number;
         page_number = 5;
         build_page_by_theme(curr_theme,page_number);		
 	});
     $("#study").click(function() {
+		prev_page = page_number;
         page_number = 2;
         build_page_by_theme(curr_theme,page_number);
         $("#study").addClass("active");
@@ -513,6 +664,7 @@ function build_page_by_theme(theme, page_num){
         $("#bckup").removeClass("active");
     });
     $("#colors").click(function() {
+		prev_page = page_number;
         page_number = 3;
         build_page_by_theme(curr_theme,page_number);
         $("#colors").addClass("active");
@@ -520,6 +672,7 @@ function build_page_by_theme(theme, page_num){
         $("#bckup").removeClass("active");
     });
     $("#bckup").click(function() {
+		prev_page = page_number;
         page_number = 4;
         build_page_by_theme(curr_theme,page_number);
         $("#bckup").addClass("active");
@@ -533,10 +686,12 @@ function build_page_by_theme(theme, page_num){
         addNew.render(moment());
     });  
     $("#sett_b").click(function() {    //goto Settings
+		prev_page = page_number;
         page_number = 2;
         build_page_by_theme(curr_theme,page_number);
     });
     $("#cal_view").click(function() {    //goto Calendar view
+		prev_page = page_number;
         page_number = 0;
         build_page_by_theme(curr_theme,page_number);
     });
@@ -548,7 +703,6 @@ function addCalanderEvent(start, end, title, colour){
 	var wColor; // 1 = the color is dark,need white writing
 	if(tiny.getBrightness() >100){
 		wColor="#000000";
-		console.log("black");
 	}else{
 		wColor="#ffffff";	
 	} 
@@ -572,7 +726,7 @@ function addCalanderEvent(start, end, title, colour){
 }
 function bckAll (){
 	localStorage.setItem("current-theme",curr_theme);
-	localStorage.setItem("AllCourses", JSON.stringify(AllCourses));
+	//localStorage.setItem("AllCourses", JSON.stringify(AllCourses));
 	localStorage.setItem("AllTests", JSON.stringify(AllTests));
 	localStorage.setItem("AllTrimsters", JSON.stringify(AllTrimsters));
 	localStorage.setItem("AllJobs", JSON.stringify(AllJobs));
@@ -580,13 +734,13 @@ function bckAll (){
 }
 function rsrAll (){
 	curr_theme = localStorage.getItem("current-theme");
-	AllCourses = JSON.parse (localStorage.getItem("AllCourses"));
+	//AllCourses = JSON.parse (localStorage.getItem("AllCourses"));
 	AllTests = JSON.parse (localStorage.getItem("AllTests"));
 	AllTrimsters = JSON.parse (localStorage.getItem("AllTrimsters"));
 	AllJobs = JSON.parse (localStorage.getItem("AllJobs"));
 	OtherEvents = JSON.parse (localStorage.getItem("OtherEvents"));
 	if(curr_theme==null )curr_theme="#f2f2f2"; 
-	if(AllCourses==null )AllCourses=[]; 
+	//if(AllCourses==null )AllCourses=[]; 
 	if(AllTests==null )AllTests=[]; 
 	if(AllTrimsters==null )AllTrimsters=[]; 
 	if(AllJobs==null )AllJobs=[]; 

@@ -7,6 +7,10 @@ html, body {
 	font-size:18px;
 	overflow:hidden;
 }
+img {
+	width: 130px;
+    height: 150px;
+}
 #calendar{
 	background-color:white;
 	height:85%;
@@ -35,22 +39,27 @@ html, body {
     max-width: 900px;
     overflow:scroll;
 }
+#info_list{
+	float:right;
+	height:100%;
+	width:30%;
+	color:red;
+}
 #bTT{
 	height:85%;
 	background: white;
-	opacity:0.8;
 	color:#01FF70;
 	margin-top:3%;
 	margin-left:5%;
     margin-right:5%;
 }
-#new_sem,#new_crs{
+#new_sem,#new_crs,#new_lss{
 	display:none;
 }
 #plus_crs{
 	
 }
-.mster,.crs {
+.mster,.crs ,.lss{
 	display:none;
 	margin:0;
 }
@@ -67,10 +76,10 @@ html, body {
 	font-size:1em;
 	margin:0;
 }
-.mster_lbl:Hover,.crs_lbl:Hover{  
+.mster_lbl:Hover,.crs_lbl:Hover,.lss_lbl:Hover{  
     background-position:100px;  
 }  
-.crs_filler{
+.crs_filler,.lss_filler{
 	height:5%;
 	width:100%;
 	float:left;
@@ -80,8 +89,9 @@ html, body {
 	font-size:1em;
 	background: linear-gradient(#C7D3DC,#5B798E); 
 	background-size:1px 200px;
+	border-style:none;
 }
-.crs_lbl{
+.crs_lbl,.lss_lbl{
 	background: linear-gradient(#C7D3DC,#5B798E); 
     transition: background 1s ease-out;  
     background-size:1px 200px;  
@@ -100,19 +110,11 @@ html, body {
 	float:left;
 }
 #Semeters{
-		border-color:black;
-	border-width:1px;
-	border-style:solid;
-	
 	width:10%;
 	height:100%;
 	float:left;
 }
 #Courses,#Lessons{
-			border-color:black;
-	border-width:1px;
-	border-style:solid;
-	
 	height:100%;
 	width:10%;
 	float:left;

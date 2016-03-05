@@ -18,7 +18,7 @@ function Course(_name,_sDate, _eDate) {
 	that.lessons=[];
     return that;
 }
-function Lesson(_type,_sHour,_eHour,_loc, _dayArray,_teacher){
+function Lesson(_type,_sHour,_eHour,_loc, _dayArray,_teacher,_color){
 	var that={};
 	
 	that.sHour =_sHour;
@@ -27,6 +27,7 @@ function Lesson(_type,_sHour,_eHour,_loc, _dayArray,_teacher){
 	that.loc =_loc;
 	that.teacher=_teacher;
 	that.dayArray= _dayArray;
+	that.backgroundColor=_color;
 	
 	that.jobs=[];
 	that.addJob=function (_job){
